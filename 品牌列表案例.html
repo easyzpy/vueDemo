@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<script src="lib/vue.js"></script>
+<link rel="stylesheet" href="./css/bootstrap.css">
+</link>
+<style>
+
+</style>
+
+<body>
+    <div id="app">
+
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">添加品牌</h3>
+            </div>
+            <div class="panel-body form-inline">
+                <label>Id:
+                    <input type="text" v-model="id">
+                </label>
+
+                <label>
+                    Name:
+                    <input type="text" v-model="name" @keyup.f2="addItem">
+                </label>
+                <button class="btn btn-primary" @click="addItem">添加</button>
+
+                <label>搜索关键字：
+                    <input type="text" v-model="keyword" v-focus @keyup.13="searchItem" v-color= "'blue'">
+                </label>
+                <button class="btn btn-primary" @click="searchItem">搜索</button>
+            </div>
+        </div>
+
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th>Ctime</th>
+                    <th>Operation</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="(item, index) in list" :key="item.id" v-show="item.isSearch">
+                    <td>{{item.id}}</td>
+                    <td>{{item.name}}</td>
+                    <td>{{item.ctime | dateFormat}}</td>
+                    <td>
+                        <a @click="delItem(item.id)">删除</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+    <script>
+        Vue.filter("dateFormat", function(date, pattern){
+            var y = date.getFullYear();
+            var M = date.getMonth() + 1;
+            var d = date.getDate();
+            if(pattern && pattern.toLowerCase() === 'yyyy-mm-dd'){
+                return `${y}-${M}-${d}`
+            }else{
+                var h = date.getHours()
+                var mm = date.getMinutes()
+                var s = date.getSeconds();
+                return `${y}-${M}-${d} ${h}:${mm}:${s}`
+            }
+        })
+
+        //自定义全局按键修饰符
+        Vue.config.keyCodes.f2 = 113
+        //定义全局指令
+        Vue.directive('focus', {
+            bind:function(el){//每当指令绑定到元素上的时候，会立即执行这个bind函数，只执行一次
+                //在每个函数中 第一个参数，永远是el 表示被绑定的元素。el是一个原生的js对象（就是一个dom对象）
+                // el.foucs()
+            },
+            inserted(el){
+                el.focus();
+            },
+            updated:function(){//Vnode更新的时候，会执行update，可能会触发多次。
+
+            }
+        })
+        //自定义一个指令， 使搜索关键字的字体变为红色
+        Vue.directive('color',{
+            bind(el, binding){
+                console.log(binding)
+                el.style.color=binding.value;
+            },
+            
+        })
+        
+        var vm = new Vue({
+            el: '#app',
+            data: {
+                list: [
+                    { id: 1, name: '奔驰', ctime: new Date(), isSearch: true },
+                    { id: 2, name: '宝马', ctime: new Date(), isSearch: true },
+                    { id: 3, name: '奥迪', ctime: new Date(), isSearch: true },
+                    { id: 4, name: '沃尔沃', ctime: new Date(), isSearch: true },
+                ],
+                id: null,
+                name: null,
+                keyword: null,
+                isSearch: true
+            },
+            methods: {
+                //新增
+                addItem() {
+                    this.list.push({ id: this.id, name: this.name, ctime: new Date(), isSearch: true })
+                },
+                //删除
+                delItem(id) {
+                    //第一种实现
+                    // this.list.some((item, i) => {
+                    //     if(item.id == id){
+                    //         this.list.splice(i, 1);
+                    //         return;
+                    //     }
+                    // })
+                    //第二种实现
+                    var index = this.list.findIndex(item => {
+                        if (item.id == id) {
+                            return true
+                        }
+                    })
+                    this.list.splice(index, 1);
+                },
+                //搜索
+                searchItem() {
+                    //获取关键字
+                    this.keyword
+                    // this.list.some((item, i) =>{
+                    //     if (item.name.indexOf(this.keyword) != -1) {
+                    //         item.isSearch = true;
+                    //         // return true;
+                    //     }else{
+                    //         item.isSearch = false;
+                    //     }
+                    // })
+                    this.list.forEach(item => {
+                        if (item.name.indexOf(this.keyword) != -1) {
+                            item.isSearch = true;
+                        } else {
+                            item.isSearch = false;
+                        }
+                    });
+                    //测试一下刚买的机械键盘，感觉一般般吧 没有我的filco好用
+                    
+                }
+            }
+        })
+        
+        
+    </script>
+</body>
+
+</html>
+<!-- vue的过滤器 {{ name | nameope }} -->

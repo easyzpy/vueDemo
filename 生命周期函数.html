@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<script src="lib/vue.js"></script>
+<style>
+</style>
+
+<body>
+    <div id="app">
+        <P id="msg">{{msg}}</P>
+        <input v-model="msg" type="text" />
+    </div>
+    <script>
+        var vm = new Vue({
+            el: '#app',
+            data: {
+                msg:"123"
+            },
+            methods: {
+            },
+            beforeCreate() {
+                //生命周期函数，表示实例完全被创建之前
+                console.log(this.msg)//undefined 结论 这个方法执行时， data和methods中的的属性都没有被初始化
+                
+                
+            },
+            created() {
+                //这也是一个声明周期函数
+                console.log(this.msg)//这个方法执行时，data和methods中的属性已经被初始化好了
+            },
+            beforeMount() {
+                //页面已经渲染， 但尚未替换模板
+                console.log(document.getElementById('msg').innerText)
+            },
+            mounted() {
+                //完全ok
+                console.log(document.getElementById('msg').innerText)
+            },
+
+            //运行中的两个事件
+            beforeUpdate() {
+                console.log(this.msg)
+            },
+            updated() {
+                
+            },
+        })
+    </script>
+</body>
+
+</html>

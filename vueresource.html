@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<script src="lib/vue.js"></script>
+<script src="lib/vue-resource.js"></script>
+<style>
+</style>
+
+<body>
+    <div id="app">
+        <button @click="getInfo">GET</button>
+        <p v-show="flag">{{id}}</p>
+        <p v-show="flag">{{name}}</p>
+        <p v-show="flag">{{age}}</p>
+    </div>
+    <script>
+        // Vue.
+
+        var vm = new Vue({
+            el: '#app',
+            data: {
+                flag:false,
+                id:null,
+                name:null,
+                age:null
+            },
+            methods: {
+                getInfo(){
+                    this.$http.get('http://localhost:8089/emp/person').then(function(result){
+                        var body = result.body;
+                        this.id=body.id;
+                        this.name = body.name;
+                        this.age = body.age;
+                        this.flag = true;
+                        
+                    })
+
+                }
+            },
+        })
+        
+    </script>
+</body>
+
+</html>
