@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<script src="lib/vue.js"></script>
+<style>
+</style>
+
+<body>
+  <div id="app">
+    <mycom2></mycom2>
+  </div>
+  <template id="template">
+    <div>
+      {{msg}}
+    </div>
+  </template>
+  <script>
+    Vue.component('mycom1', {
+      template: '<div>这是com1的{{msg}}</div>',
+      data:function(){
+        return {
+          msg:"asdf"
+        }
+      }
+    })
+    Vue.component('mycom2', {
+      template:'#template',
+      data:function(){
+        return {
+          msg:"123123"
+        }
+      }
+    })
+    var vm = new Vue({
+      el: '#app',
+      data: {
+      },
+      methods: {
+      }
+    })
+  </script>
+</body>
+
+</html>

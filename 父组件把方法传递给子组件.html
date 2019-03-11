@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<script src="lib/vue.js"></script>
+<style>
+</style>
+
+<body>
+  <div id="app">
+    <com2 @func="show"></com2>
+  </div>
+  <template id="template">
+    <div >
+      我是一个模板
+      <button @click="myclick">触发</button>
+    </div>
+  </template>
+  <script>
+
+    var com2 = {
+      template:'#template',
+      methods:{
+        myclick(){
+          console.log('asdf', '')
+          this.$emit('func')//这个单词就是触发的意思
+        }
+      }
+    }
+
+    var vm = new Vue({
+      el: '#app',
+      data: {
+      },
+      methods: {
+        show(){
+          console.log('调用了父组件身上的show方法', '')
+        }
+      },
+      components:{
+        com2
+        
+      }
+    })
+  </script>
+</body>
+
+</html>

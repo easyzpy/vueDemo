@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<link rel="stylesheet" href="css/bootstrap.css">
+<script src="lib/vue.js"></script>
+<!-- <link rel="stylesheet" href="css/bootstrap.css"> -->
+
+<style>
+</style>
+
+<body>
+  <div id="app">
+
+    <commentbox @func="addComment"></commentbox>
+
+    <ul class="list-group">
+      <li class="list-group-item" v-for="(item, index) in list" :key="item.id">
+        <span class="badge">评论人:{{item.user}}</span>
+        {{item.content}}
+      </li>
+    </ul>
+  </div>
+  <template id="template">
+    <div>
+      <div class="form-group">
+        <label>评论人</label>
+        <input type="text" class="form-control" v-model="user">
+      </div>
+      <div class="form-group">
+        <label>评论内容</label>
+        <textarea class="form-control" v-model="content"></textarea>
+      </div>
+      <div class="form-group">
+        <button class="btn btn-primary" @click="postComment()">发表评论</button>
+      </div>
+    </div>
+  </template>
+  <script>
+    var commentbox = {
+      template: "#template",
+      data: function () {
+        return {
+          user: null,
+          content: null
+        }
+      },
+      methods: {
+        postComment() {
+          if(!this.user || !this.content){
+            alert("评论人和评论内容不能为空")
+          }
+          
+          this.$emit('func', this.user, this.content)
+        }
+      }
+    }
+
+    var vm = new Vue({
+      el: '#app',
+      data: {
+        list: [
+          { id: 1, user: '李白', content: '天生我材必有用' },
+          { id: 2, user: '苏轼', content: '大江东去,浪淘尽' },
+          { id: 3, user: '辛弃疾', content: '醉里挑灯看剑' },
+        ]
+      },
+      methods: {
+        addComment(user, content){
+          this.list.push({id:Date.now(), user:user, content:content});
+        }
+      },
+      components: {
+        commentbox: commentbox
+      }
+    })
+  </script>
+</body>
+
+</html>

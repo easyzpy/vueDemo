@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<script src="lib/vue.js"></script>
+<style>
+</style>
+
+<body>
+  <div id="app">
+    <plus1></plus1>
+    <plus2></plus2>
+  </div>
+  <template id="temp1">
+    <div>
+      {{num}}
+      <button @click="add(num, $event)">num1 + 1</button>
+    </div>
+  </template>
+  <template id="temp2">
+    <div>
+      {{num}}
+      <button @click="add(num, $event)">num2 + 1</button>
+    </div>
+  </template>
+  <script>
+    Vue.component('plus1', {
+      template: '#temp1',
+      data: function () {
+        return {
+          num: 0
+        }
+      },
+      methods:{
+
+        add(num, event){
+          this.num++
+          console.log(num)
+        }
+      }
+    })
+    Vue.component('plus2', {
+      template: '#temp2',
+      data: function () {
+        return {
+          num: 0
+        }
+      }
+    })
+    var vm = new Vue({
+      el: '#app',
+      data: {
+        num:8
+      },
+      methods: {
+      }
+    })
+  </script>
+</body>
+
+</html>

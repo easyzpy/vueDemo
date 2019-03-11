@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<link rel="stylesheet" href='css/bootstrap.css' />
+<script src="lib/vue.js"></script>
+<script src="lib/vue-resource.js"></script>
+
+<style>
+</style>
+
+<body>
+  <form action="http://localhost:8089/emp/downloadExcel">
+    <input type="submit" value="asdfasdf">
+  </form>
+  <div id="app">
+
+    <cmt-box></cmt-box>
+    <button @click="exportExcel">测试导出excel</button>
+    <ul class="list-group">
+      <li class="list-group-item" v-for="(item, index) in list" :key="item.id">
+        <span class="badge">评论人：{{item.user}}</span>
+        {{item.content}}
+      </li>
+    </ul>
+  </div>
+  <template id="tmpl">
+    <div>
+      <div class="form-group">
+        <label>评论人:</label>
+        <input type='text' class="form-control" />
+      </div>
+      <div class="form-group">
+        <label for="">评论内容</label>
+        <textarea class="form-control"></textarea>
+      </div>
+    </div>
+  </template>
+  <script>
+    Vue.http.options.root = "http://localhost:8089"
+    var contentBox = {
+      template: '#tmpl'
+    }
+    var vm = new Vue({
+      el: '#app',
+      data: {
+        list: [
+          { id: 1, user: '李白', content: '天生我才必有用' },
+          { id: 2, user: '杜甫', content: '感时花溅泪，恨别鸟惊心' },
+          { id: 3, user: '王勃', content: '落霞与孤鹜齐飞，秋水共长天一色' }
+        ]
+      },
+      methods: {
+        exportExcel: function () {
+          // this.$http.get('emp/downloadExcel',
+          //   {
+          //     name: this.name
+          //   }
+          // ).then((result) => {
+          //   if (result.ok) {
+          //     // this.list.push(result.body)
+          //   }
+
+          // })
+          let url_post = "emp/downloadExcel";
+
+          let params_post = {
+          };
+
+          this.$http.post(url_post, params_post, { responseType: 'arraybuffer' }).then((res) => {
+
+            let fileName = res.headers.map['content-disposition'][0].match(/fushun(\S*)xls/);
+
+            // fileName = "Norecord_Social_Credit_Code.xls";
+            
+
+            
+            let blob = new Blob([res.data], { type: "application/vnd.ms-excel" });
+
+            let objectUrl = URL.createObjectURL(blob);
+            const link = document.createElement('a')
+            link.download = fileName;
+            link.style.display = 'none';
+            link.href = objectUrl
+            document.body.appendChild(link)
+            link.click();
+            document.body.removeChild(link)
+
+            // window.location.href = objectUrl;
+
+          }).catch(function (res) { });
+        }
+      },
+      components: {
+        'cmt-box': contentBox
+      }
+    })
+  </script>
+</body>
+
+</html>
